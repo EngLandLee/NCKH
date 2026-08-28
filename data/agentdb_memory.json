@@ -1,0 +1,641 @@
+{
+  "learned_rules": {},
+  "execution_logs": [
+    {
+      "task_type": "invoice",
+      "input": "Số: 100000. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Cộng tiền hàng: 20,000,000 VND. Tiền thuế GTGT: 2,000,000 VND. Tổng cộng tiền thanh toán: 22,000,000",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100000. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100004. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100008. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100012. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100016. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100020. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100024. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100028. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100032. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100036. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100040. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100044. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100048. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100052. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100056. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100060. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100064. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100068. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100072. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100076. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100080. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100084. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100088. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100092. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100096. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Cộng tiền hàng: 20,000,000 VND. Tiền thuế GTGT: 2,000,000 VND. Tổng cộng tiền thanh toán: 22,000,000",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100000. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100004. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100008. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100012. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100016. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100020. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100024. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100028. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100032. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100036. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100040. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100044. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100048. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100052. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100056. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100060. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100064. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100068. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100072. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100076. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100080. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100084. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100088. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100092. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100096. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Cộng tiền hàng: 20,000,000 VND. Tiền thuế GTGT: 2,000,000 VND. Tổng cộng tiền thanh toán: 22,000,000",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100000. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100004. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100008. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100012. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100016. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100020. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100024. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100028. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100032. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100036. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100040. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100044. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100048. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100052. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100056. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100060. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100064. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100068. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100072. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100076. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100080. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100084. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100088. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100092. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100096. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Cộng tiền hàng: 20,000,000 VND. Tiền thuế GTGT: 2,000,000 VND. Tổng cộng tiền thanh toán: 22,000,000",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100000. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100004. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100008. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100012. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100016. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100020. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100024. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100028. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100032. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100036. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100040. Đơn vị: CÔNG TY TNHH LINH KIỆN ĐIỆN TỬ SAMSUNG. Mã số thuế: 2300554433. Hàng hóa: Vi mạc",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100044. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100048. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100052. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100056. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100060. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100064. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100068. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100072. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100076. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100080. Đơn vị: CÔNG TY CP THIẾT BỊ ĐO LƯỜNG CÔNG NGHIỆP. Mã số thuế: 0309988776. Hàng hóa: Đồng",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100084. Đơn vị: CÔNG TY TNHH VẬT LIỆU XÂY DỰNG TOÀN CẦU. Mã số thuế: 0312345678. Hàng hóa: Thép ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100088. Đơn vị: TỔNG CÔNG TY DỊCH VỤ VẬN TẢI SAO MAI. Mã số thuế: 0311223344. Hàng hóa: Cước vận",
+      "decision": "TK 156",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100092. Đơn vị: CÔNG TY CỔ PHẦN BAO BÌ NHỰA TÂN TIẾN. Mã số thuế: 0301122334. Hàng hóa: Bao bì m",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Số: 100096. Đơn vị: TẬP ĐOÀN HÓA CHẤT ĐỨC GIANG. Mã số thuế: 0100987654. Hàng hóa: Hóa chất phụ gia ",
+      "decision": "TK 152",
+      "confidence": 0.95
+    },
+    {
+      "task_type": "invoice",
+      "input": "Cộng tiền hàng: 20,000,000 VND. Tiền thuế GTGT: 2,000,000 VND. Tổng cộng tiền thanh toán: 22,000,000",
+      "decision": "TK 152",
+      "confidence": 0.95
+    }
+  ]
+}
