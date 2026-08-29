@@ -90,9 +90,25 @@ export const RAGAssistant: React.FC = () => {
               <div className="flex items-center space-x-2">
                 {result.is_cache_hit && (
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                    Semantic Cache Hit
+                    Cache Hit
                   </span>
                 )}
+                <span
+                  title={
+                    result.retrieval_mode === 'SEMANTIC'
+                      ? `Embeddings: ${result.embedding_model} · cosine ${result.retrieval_score.toFixed(3)}`
+                      : `BM25 · score ${result.retrieval_score.toFixed(2)}${
+                          result.fallback_reason ? ` · ${result.fallback_reason}` : ''
+                        }`
+                  }
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold border cursor-help ${
+                    result.retrieval_mode === 'SEMANTIC'
+                      ? 'bg-violet-500/20 text-violet-300 border-violet-500/30'
+                      : 'bg-slate-600/20 text-slate-300 border-slate-500/30'
+                  }`}
+                >
+                  {result.retrieval_mode === 'SEMANTIC' ? 'SEMANTIC' : 'BM25'}
+                </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                   Độ trễ: {result.latency_ms} ms
                 </span>

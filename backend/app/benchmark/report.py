@@ -68,9 +68,43 @@ def main() -> int:
     print()
 
     _report_escalation()
+    _report_rag_retrieval()
 
     print(report.latex_table)
     return 0
+
+
+def _report_rag_retrieval() -> None:
+    """Paraphrase retrieval accuracy: BM25 alone, and semantic if a key exists."""
+    from backend.app.agents.rag_agent import RAGAgent, RAGQueryRequest
+    from backend.tests.test_rag_retrieval import (
+        HARD_PARAPHRASE_QUERIES,
+        PARAPHRASE_QUERIES,
+        _retrieved_id,
+    )
+
+    agent = RAGAgent()
+
+    def score(queries, semantic: bool) -> int:
+        return sum(
+            1 for q, expected in queries
+            if _retrieved_id(agent.query(RAGQueryRequest(query=q, allow_semantic=semantic))) == expected
+        )
+
+    print("=== SOP retrieval (paraphrased queries) ===")
+    easy_n, hard_n = len(PARAPHRASE_QUERIES), len(HARD_PARAPHRASE_QUERIES)
+    lex_easy = score(PARAPHRASE_QUERIES, False)
+    lex_hard = score(HARD_PARAPHRASE_QUERIES, False)
+    print(f"BM25 lexical   : easy {lex_easy}/{easy_n}, hard {lex_hard}/{hard_n}")
+
+    if agent.embedder.is_available:
+        agent.cache.clear()
+        sem_easy = score(PARAPHRASE_QUERIES, True)
+        sem_hard = score(HARD_PARAPHRASE_QUERIES, True)
+        print(f"Semantic ({agent.embedder.model}): easy {sem_easy}/{easy_n}, hard {sem_hard}/{hard_n}")
+    else:
+        print("Semantic       : skipped (OPENAI_API_KEY not set) — falls back to BM25")
+    print()
 
 
 def _report_escalation() -> None:

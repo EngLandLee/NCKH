@@ -32,7 +32,7 @@ Chỉ trình diễn khi thấy đủ 3 dòng xanh: backend healthy → frontend 
 
 **Checklist:**
 - [ ] `./run_demo.sh --check` pass
-- [ ] `pytest backend/tests/ -q` → 28 passed
+- [ ] `pytest backend/tests/ -q` → 42 passed, 2 skipped
 - [ ] Mở sẵn 3 tab: Dashboard `:3000`, Swagger `:8008/docs`, video dự phòng
 - [ ] Tắt thông báo hệ thống, đặt terminal cỡ chữ lớn
 - [ ] **Đã quay video dự phòng** (mục 4)
@@ -106,10 +106,20 @@ hệ thống tự đề xuất PO khẩn 1706 đơn vị. Độ trễ 0.43 ms.
 
 > "Công thức tồn kho an toàn chuẩn: z·σ·√LT với mức phục vụ 95%."
 
-### Phần 4 (30s) — RAG
+### Phần 4 (40s) — RAG
 
-Hỏi *"Xử lý thế nào khi giao hàng trễ do ngập lụt?"* → trả lời kèm **trích dẫn
-chính xác** `SOP-LOG-02, Điều 9, Trang 42`. Hỏi lại → cache hit, 0.00 ms.
+Hỏi bằng **từ ngữ không có trong tài liệu**: *"Xe không giao kịp vì đường ngập
+thì làm sao?"* → vẫn trả đúng `SOP-LOG-02, Điều 9, Trang 42`, badge **`BM25`**
+(hoặc **`SEMANTIC`** màu tím nếu có key), rê chuột thấy điểm truy xuất.
+
+Rồi hỏi một câu **ngoài phạm vi**: *"Giá cổ phiếu VNM hôm nay thế nào?"* →
+hệ thống **từ chối trả lời**, confidence 0.50.
+
+> "Điểm này quan trọng: bản trước trả lời sai nhưng vẫn báo độ tin cậy 0.85.
+> Chúng tôi sửa cách chấm điểm sang BM25 có chuẩn hóa độ dài, và thêm ngưỡng
+> từ chối. Thà nói không biết còn hơn tự tin sai."
+
+Hỏi lại câu cũ → cache hit, 0.00 ms.
 
 ### Phần 5 (60s) — Benchmark: **chốt bằng sự trung thực**
 
@@ -169,9 +179,19 @@ mạng. Nhánh LLM mới tốn ~1-2 giây, nhưng chỉ chạm vào phần đuô
 cáo tách bạch hai con số thay vì trộn lẫn.
 
 **H: RAG này có phải RAG thật không?**
-Thẳng thắn: hiện là **xếp hạng từ khóa** trên 4 tài liệu SOP + cache exact-match,
-**chưa phải** vector embedding. Chúng tôi gọi đúng tên trong README. Hướng nâng
-cấp tiếp theo là OpenAI embeddings + cosine similarity.
+Có hai tầng. Tầng nhanh là **BM25** (có IDF và chuẩn hóa độ dài), tầng semantic
+là **OpenAI embeddings + cosine similarity**, vector tài liệu tính một lần lúc
+khởi động. Thiếu key thì tự động lùi về BM25 và ghi rõ `LEXICAL_FALLBACK`.
+
+Đo trên tập câu hỏi diễn đạt lại: BM25 đạt **10/10** câu dễ nhưng chỉ **4/6**
+câu khó (từ vựng không giao nhau) — đó chính là chỗ embeddings có giá trị.
+Thành thật mà nói, với kho chỉ **4 tài liệu** thì BM25 đã gần đủ; lợi ích của
+embeddings sẽ rõ hơn khi kho tài liệu lớn lên.
+
+**H: Sao biết hệ thống không "bịa" câu trả lời?**
+Nó không sinh văn bản — chỉ trích nguyên văn điều khoản kèm số trang. Và có
+**ngưỡng từ chối**: BM25 < 2.0 hoặc cosine < 0.30 thì trả "không tìm thấy".
+Ngưỡng 2.0 suy ra từ số đo: câu trong phạm vi ≥ 3.40, ngoài phạm vi ≤ 1.17.
 
 **H: Điểm khác biệt so với đội khác?**
 Ba điểm: (1) kết hợp LLM với **bộ giải toán tất định** OR-Tools thay vì chỉ

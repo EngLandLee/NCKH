@@ -59,6 +59,12 @@ export interface RAGQueryResponse {
   confidence: number;
   latency_ms: number;
   is_cache_hit: boolean;
+  // Retrieval audit trail
+  retrieval_mode: 'SEMANTIC' | 'LEXICAL' | 'LEXICAL_FALLBACK';
+  retrieval_score: number;
+  lexical_doc_id: string | null;
+  embedding_model: string | null;
+  fallback_reason: string | null;
 }
 
 export interface DomainMetrics {
