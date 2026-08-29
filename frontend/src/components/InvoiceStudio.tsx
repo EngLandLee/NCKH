@@ -60,7 +60,8 @@ Hình thức thanh toán: Chuyển khoản (Chưa thanh toán)`);
 
           <div className="flex items-center justify-between pt-2">
             <span className="text-[11px] text-slate-400">
-              Chế độ: <strong className="text-emerald-400">Fast-Path Auto-Extraction</strong>
+              Chế độ: <strong className="text-emerald-400">Dual-Speed</strong>
+              <span className="text-slate-500"> (Fast-Path → LLM khi độ tin cậy thấp)</span>
             </span>
             <button
               onClick={handleProcess}
@@ -82,9 +83,18 @@ Hình thức thanh toán: Chuyển khoản (Chưa thanh toán)`);
                 <span>Kết Quả Hạch Toán & Phân Loại Định Khoản</span>
               </span>
               {result && (
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                  {result.processing_latency_ms} ms
-                </span>
+                <div className="flex items-center space-x-1.5">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
+                    result.is_fast_path
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                      : 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                  }`}>
+                    {result.is_fast_path ? 'FAST-PATH' : 'LLM SLOW-PATH'}
+                  </span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                    {result.processing_latency_ms} ms
+                  </span>
+                </div>
               )}
             </div>
 
@@ -100,6 +110,53 @@ Hình thức thanh toán: Chuyển khoản (Chưa thanh toán)`);
                     Độ tin cậy: <strong className="text-cyan-400">{(result.confidence_score * 100).toFixed(1)}%</strong>
                   </span>
                 </div>
+
+                {/* Dual-Speed Escalation Audit Trail */}
+                {result.escalation_status !== 'NOT_TRIGGERED' && (
+                  <div className={`p-3 rounded-lg border space-y-2 ${
+                    result.escalation_status === 'ESCALATED'
+                      ? 'bg-purple-950/30 border-purple-500/30'
+                      : 'bg-amber-950/30 border-amber-500/30'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-mono uppercase tracking-wide text-slate-300">
+                        {result.escalation_status === 'ESCALATED'
+                          ? '🧠 Đã chuyển sang LLM (Slow Path)'
+                          : '⚠️ Escalation không khả dụng — giữ kết quả Fast-Path'}
+                      </span>
+                      {result.escalation_latency_ms > 0 && (
+                        <span className="text-[10px] font-mono text-slate-400">
+                          +{result.escalation_latency_ms} ms
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap gap-1">
+                      {result.escalation_triggers.map((t) => (
+                        <span key={t} className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-slate-950/70 text-amber-300 border border-amber-500/20">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    {result.escalation_status === 'ESCALATED' && result.fast_path_debit_account && (
+                      <div className="flex items-center space-x-2 text-[11px] font-mono pt-1">
+                        <span className="text-slate-500 line-through">{result.fast_path_debit_account}</span>
+                        <span className="text-slate-500">→</span>
+                        <span className="text-purple-300 font-bold">{result.debit_account}</span>
+                        {result.escalation_model && (
+                          <span className="text-slate-500">({result.escalation_model})</span>
+                        )}
+                      </div>
+                    )}
+
+                    {result.escalation_reasoning && (
+                      <p className="text-[10px] text-slate-400 leading-relaxed pt-0.5">
+                        {result.escalation_reasoning}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 {/* Accounting Mapping Box */}
                 <div className="p-4 rounded-lg bg-gradient-to-r from-blue-950/40 to-slate-900 border border-blue-500/30 space-y-2">

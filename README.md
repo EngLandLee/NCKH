@@ -135,6 +135,15 @@ PYTHONPATH=. backend/venv/bin/pytest backend/tests/ -v
 
 ---
 
+## 🎤 Demo Day
+- **Kịch bản trình diễn, Q&A & phương án dự phòng:** [`docs/DEMO_DAY.md`](docs/DEMO_DAY.md)
+
+```bash
+./run_demo.sh --check   # preflight: venv, deps, cổng, API key — không khởi động gì
+```
+
+---
+
 ## 📑 Tài Liệu Nghiên Cứu Khoa Học (Paper & Specs)
 - **Đề Cương Bài Báo Khoa Học (LaTeX & English Draft):** [`docs/paper_outline.md`](docs/paper_outline.md)
 - **Tài Liệu Đặc Tả Thiết Kế Hệ Thống:** [`docs/superpowers/specs/2026-08-28-supplychain-agentichub-design.md`](docs/superpowers/specs/2026-08-28-supplychain-agentichub-design.md)

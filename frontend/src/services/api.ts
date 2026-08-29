@@ -13,6 +13,13 @@ export interface InvoiceResult {
   status: string;
   processing_latency_ms: number;
   is_fast_path: boolean;
+  // Dual-speed audit trail
+  escalation_status: 'NOT_TRIGGERED' | 'ESCALATED' | 'UNAVAILABLE' | 'FAILED';
+  escalation_triggers: string[];
+  fast_path_debit_account: string | null;
+  escalation_reasoning: string | null;
+  escalation_model: string | null;
+  escalation_latency_ms: number;
 }
 
 export interface DeliveryStop {
@@ -54,6 +61,16 @@ export interface RAGQueryResponse {
   is_cache_hit: boolean;
 }
 
+export interface DomainMetrics {
+  domain: string;
+  samples: number;
+  criterion: string;
+  accuracy: number;
+  macro_f1: number | null;
+  mean_latency_ms: number;
+  p95_latency_ms: number;
+}
+
 export interface BenchmarkReport {
   total_samples: number;
   mean_latency_ms: number;
@@ -64,6 +81,7 @@ export interface BenchmarkReport {
   fast_path_ratio_pct: number;
   overall_f1_score: number;
   accuracy: number;
+  per_domain: DomainMetrics[];
   latex_table: string;
 }
 
