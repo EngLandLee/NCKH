@@ -12,7 +12,7 @@ tại Demo Day, kỹ năng thuyết trình & trả lời hội đồng").
 ## 1. Trước khi lên sân khấu (T-15 phút)
 
 ```bash
-./run_demo.sh --check      # preflight, không khởi động gì
+make check      # preflight, không khởi động gì
 ```
 
 Preflight kiểm tra: venv Python 3.12, `ortools`/`fastapi`/`numpy` import được,
@@ -21,18 +21,18 @@ Preflight kiểm tra: venv Python 3.12, `ortools`/`fastapi`/`numpy` import đư�
 > ⚠️ **Lỗi đã thực sự xảy ra khi thử nghiệm:** cổng 3000 bị chiếm, Vite âm thầm
 > nhảy sang 3001 trong khi banner vẫn ghi 3000. Trên sân khấu điều này trông
 > như "app hỏng". Script nay dùng `--strictPort` và **báo lỗi to** thay vì trôi
-> sang cổng khác. Nếu gặp: `FRONTEND_PORT=3100 ./run_demo.sh`.
+> sang cổng khác. Nếu gặp: `make dev FRONTEND_PORT=3100`.
 
 ```bash
-./run_demo.sh              # khởi động thật
+make dev        # khởi động thật (tự cài nếu thiếu)
 ```
 
 Chỉ trình diễn khi thấy đủ 3 dòng xanh: backend healthy → frontend serving →
 **proxy verified end-to-end**.
 
 **Checklist:**
-- [ ] `./run_demo.sh --check` pass
-- [ ] `pytest backend/tests/ -q` → 42 passed, 2 skipped
+- [ ] `make check` pass
+- [ ] `make test` → 42 passed, 2 skipped
 - [ ] Mở sẵn 3 tab: Dashboard `:3000`, Swagger `:8008/docs`, video dự phòng
 - [ ] Tắt thông báo hệ thống, đặt terminal cỡ chữ lớn
 - [ ] **Đã quay video dự phòng** (mục 4)
@@ -74,7 +74,7 @@ Kết quả: badge chuyển **`LLM SLOW-PATH`** màu tím, hiện đủ 3 trigge
 > 🔑 **BẮT BUỘC có `OPENAI_API_KEY` cho phần này.** Không có key, hệ thống vẫn
 > chạy nhưng panel hiện màu **hổ phách `UNAVAILABLE`** và giữ nguyên TK 152 —
 > tức khán giả thấy trigger nhưng **không thấy LLM sửa sai**, mất đúng phần ăn
-> điểm. Kiểm tra bằng `./run_demo.sh --check`: phải thấy dòng
+> điểm. Kiểm tra bằng `make check` hoặc `make doctor`: phải thấy dòng
 > *"OPENAI_API_KEY configured — LLM escalation ACTIVE"*.
 >
 > Nếu không có key: bỏ hóa đơn khó khỏi kịch bản, thay bằng câu nói
@@ -221,7 +221,7 @@ từng domain, phát hiện bug nhãn trường, tập held-out — đó là ph�
 
 | Sự cố | Xử lý |
 |---|---|
-| Cổng 3000 bị chiếm | `FRONTEND_PORT=3100 ./run_demo.sh` |
+| Cổng 3000 bị chiếm | `make dev FRONTEND_PORT=3100` |
 | Vite không lên | `cd frontend && pnpm build && npx vite preview --port 3000` |
 | Backend chết | `tail -20 /tmp/agentichub_backend.log` |
 | Mất mạng | Không ảnh hưởng — chỉ nhánh LLM tắt, tự degrade |
@@ -245,9 +245,10 @@ ffmpeg -f x11grab -s 1920x1080 -i :0.0 -f pulse -i default \
 ## 5. Lệnh bỏ túi
 
 ```bash
-./run_demo.sh --check                                    # preflight
-./run_demo.sh                                            # khởi động
-PYTHONPATH=. backend/venv/bin/pytest backend/tests/ -q   # 28 passed
-PYTHONPATH=. backend/venv/bin/python -m backend.app.benchmark.report
+make check      # preflight: deps + cổng
+make doctor     # môi trường: uv, pnpm, venv, API key, cổng
+make dev        # khởi động (tự cài nếu thiếu)
+make test       # 42 passed, 2 skipped
+make bench      # benchmark + truy xuất SOP
 curl -s "http://localhost:8008/api/benchmark/run?samples=1000" | python3 -m json.tool
 ```

@@ -116,38 +116,46 @@ Bảng benchmark ở trên chỉ dùng **4 câu hỏi cố định** khớp đú
 
 ## 🛠️ Cài Đặt & Khởi Chạy (Quick Start)
 
-### 0. Cài Đặt Môi Trường (Lần Đầu)
-
-> ⚠️ `ortools` **chưa có wheel cho Python 3.14** — bắt buộc dùng Python 3.12.
+### Chỉ cần một lệnh
 
 ```bash
-# Khuyến nghị: uv (không cần sudo, tự tải Python 3.12)
-uv venv backend/venv --python 3.12
-VIRTUAL_ENV=backend/venv uv pip install -r backend/requirements.txt
+make dev
+```
 
-# Hoặc dùng venv chuẩn (cần: sudo apt install python3.12-venv)
-python3.12 -m venv backend/venv
-backend/venv/bin/pip install -r backend/requirements.txt
+Lệnh này **tự cài mọi thứ còn thiếu** (venv Python 3.12, thư viện backend,
+`node_modules`) rồi khởi động cả backend lẫn frontend. Chạy được ngay trên bản
+clone sạch. Lần chạy sau bỏ qua bước cài (idempotent).
 
-# Frontend
-cd frontend && pnpm install && cd ..
+- **Dashboard:** http://localhost:3000
+- **Swagger API docs:** http://localhost:8008/docs
+- **Benchmark:** http://localhost:8008/api/benchmark/run?samples=1000
 
-# (Tùy chọn) Bật nhánh LLM escalation — thiếu key hệ thống vẫn chạy bình thường
+Cổng bị chiếm thì đổi: `make dev FRONTEND_PORT=3100`
+
+### Các lệnh khác
+
+| Lệnh | Việc |
+| :--- | :--- |
+| `make dev` | Cài (nếu thiếu) rồi khởi động — **lệnh chính** |
+| `make check` | Preflight: kiểm tra deps + cổng, không khởi động |
+| `make doctor` | Báo cáo môi trường: uv, pnpm, venv, API key, cổng |
+| `make test` | Chạy test suite (42 passed, 2 skipped) |
+| `make bench` | Tái lập số liệu benchmark + truy xuất SOP |
+| `make build` | Type-check và build bundle production |
+| `make lint` | Byte-compile backend + `tsc --noEmit` frontend |
+| `make clean` | Xóa build output và cache |
+| `make clean-all` | Xóa luôn venv và `node_modules` |
+| `make help` | Liệt kê toàn bộ lệnh |
+
+### Yêu cầu
+
+- **[uv](https://docs.astral.sh/uv/)** — tự tải Python 3.12, không cần sudo
+  (`ortools` **chưa có wheel cho Python 3.14**)
+- **pnpm** — `npm i -g pnpm`
+
+```bash
+# (Tùy chọn) Bật LLM escalation + semantic RAG — thiếu key hệ thống vẫn chạy
 echo 'OPENAI_API_KEY=sk-...' > .env
-```
-
-### 1. Khởi chạy 1-Click (All-in-One)
-```bash
-./run_demo.sh
-```
-Hệ thống sẽ đồng thời khởi chạy:
-- **Web Dashboard:** [http://localhost:3000](http://localhost:3000)
-- **FastAPI Backend Swagger Docs:** [http://localhost:8008/docs](http://localhost:8008/docs)
-- **Engine Benchmark Trực Tuyến:** [http://localhost:8008/api/benchmark/run?samples=1000](http://localhost:8008/api/benchmark/run?samples=1000)
-
-### 2. Chạy Kiểm Thử Tự Động (Automated Tests)
-```bash
-PYTHONPATH=. backend/venv/bin/pytest backend/tests/ -v
 ```
 
 ---
@@ -156,7 +164,7 @@ PYTHONPATH=. backend/venv/bin/pytest backend/tests/ -v
 - **Kịch bản trình diễn, Q&A & phương án dự phòng:** [`docs/DEMO_DAY.md`](docs/DEMO_DAY.md)
 
 ```bash
-./run_demo.sh --check   # preflight: venv, deps, cổng, API key — không khởi động gì
+make check   # preflight: venv, deps, cổng, API key — không khởi động gì
 ```
 
 ---

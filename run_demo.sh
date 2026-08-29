@@ -19,6 +19,9 @@ BACKEND_PORT="${BACKEND_PORT:-8008}"
 FRONTEND_PORT="${FRONTEND_PORT:-3000}"
 VENV_PY="$ROOT_DIR/backend/venv/bin/python3"
 
+# Echo back whichever entry point the user actually used.
+LAUNCH_HINT="${LAUNCH_HINT:-./run_demo.sh}"
+
 if [ -t 1 ]; then
     RED=$'\033[0;31m'; GREEN=$'\033[0;32m'; YELLOW=$'\033[1;33m'; NC=$'\033[0m'
 else
@@ -69,7 +72,7 @@ for p in "$BACKEND_PORT:backend:BACKEND_PORT" "$FRONTEND_PORT:frontend:FRONTEND_
     port="${p%%:*}"; rest="${p#*:}"; role="${rest%%:*}"; var="${rest##*:}"
     if port_busy "$port"; then
         die "Port $port ($role) is already in use.
-      Free it, or choose another:  $var=<port> ./run_demo.sh
+      Free it, or choose another:  $var=<port> $LAUNCH_HINT
       Find the holder with:        ss -tlnp | grep :$port"
     fi
 done
