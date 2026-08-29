@@ -253,6 +253,15 @@ def test_embedding_failure_degrades_to_lexical_with_a_reason():
 def test_live_semantic_beats_lexical_on_hard_paraphrases():
     """With real embeddings the hard set should improve on BM25's 4/6."""
     agent = RAGAgent()
+
+    # A key being present does not mean the backend is reachable — it may be
+    # out of quota or blocked. Skip rather than fail: this test measures
+    # retrieval quality, not account billing state.
+    probe = agent.query(RAGQueryRequest(query=HARD_PARAPHRASE_QUERIES[0][0]))
+    if probe.retrieval_mode != "SEMANTIC":
+        pytest.skip(f"embeddings unavailable: {probe.fallback_reason}")
+
+    agent.cache.clear()
     correct = sum(
         1 for q, expected in HARD_PARAPHRASE_QUERIES
         if _retrieved_id(agent.query(RAGQueryRequest(query=q))) == expected

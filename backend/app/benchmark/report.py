@@ -101,7 +101,18 @@ def _report_rag_retrieval() -> None:
         agent.cache.clear()
         sem_easy = score(PARAPHRASE_QUERIES, True)
         sem_hard = score(HARD_PARAPHRASE_QUERIES, True)
-        print(f"Semantic ({agent.embedder.model}): easy {sem_easy}/{easy_n}, hard {sem_hard}/{hard_n}")
+
+        # If every embedding call failed, the retriever silently served BM25.
+        # Labelling those numbers "Semantic" would misreport the fast path as
+        # the semantic result.
+        probe = agent.query(RAGQueryRequest(query=PARAPHRASE_QUERIES[0][0], allow_semantic=True))
+        if probe.retrieval_mode == "SEMANTIC":
+            print(f"Semantic ({agent.embedder.model}): easy {sem_easy}/{easy_n}, hard {sem_hard}/{hard_n}")
+        else:
+            reason = (probe.fallback_reason or "unknown")[:150]
+            print(f"Semantic       : NOT MEASURED — every embedding call failed")
+            print(f"                 {reason}")
+            print("                 The numbers above are BM25's; embeddings never ran.")
     else:
         print("Semantic       : skipped (OPENAI_API_KEY not set) — falls back to BM25")
     print()
@@ -121,24 +132,40 @@ def _report_escalation() -> None:
         return
 
     agent = InvoiceAgent()
-    correct = escalated = 0
+    correct = escalated = triggered = 0
     latencies = []
+    failures: list[str] = []
     for item, expected in HELD_OUT_INVOICES:
         # Drop the tax code so these look like messy real-world scans.
         text = _invoice_text(item).replace("Mã số thuế: 0312345678. ", "")
         res = agent.process(InvoiceRawInput(raw_text=text, filename="held_out.txt"))
+        if res.escalation_triggers:
+            triggered += 1
         if res.escalation_status == "ESCALATED":
             escalated += 1
             latencies.append(res.escalation_latency_ms)
+        elif res.escalation_status in ("FAILED", "UNAVAILABLE") and res.escalation_reasoning:
+            failures.append(res.escalation_reasoning)
         if res.debit_account == expected:
             correct += 1
 
     n = len(HELD_OUT_INVOICES)
-    print(f"Escalated          : {escalated}/{n}")
+    print(f"Triggered          : {triggered}/{n}")
+    print(f"Escalated (LLM ran): {escalated}/{n}")
     print(f"Accuracy after LLM : {correct}/{n} = {correct / n * 100:.2f}%")
     if latencies:
         print(f"Escalation latency : mean {sum(latencies) / len(latencies):.0f} ms, "
               f"max {max(latencies):.0f} ms")
+
+    # A silent 0/8 reads as "nothing needed escalating". Say why instead.
+    if failures and not escalated:
+        reason = failures[0]
+        print()
+        print(f"!! The LLM never ran — every call failed: {reason[:160]}")
+        if "insufficient_quota" in reason or "credit" in reason.lower():
+            print("   The OpenAI account is out of credit. The accuracy above is the")
+            print("   fast path's, NOT the escalated result — do not report it as one.")
+        print("   Fail-safe worked: the fast-path answer was kept and nothing raised.")
     print()
 
 

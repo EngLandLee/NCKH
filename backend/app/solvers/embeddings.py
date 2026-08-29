@@ -109,7 +109,7 @@ class EmbeddingRetriever:
         self,
         documents: Sequence[Dict],
         model: str = "text-embedding-3-small",
-        timeout_s: float = 8.0,
+        timeout_s: float = 5.0,
     ):
         self.documents = list(documents)
         self.model = model
@@ -117,6 +117,7 @@ class EmbeddingRetriever:
         self._client = None
         self._doc_matrix: Optional[np.ndarray] = None
         self._init_error: Optional[str] = None
+        self._circuit_open = False
         self._query_cache: Dict[str, np.ndarray] = {}
 
     @property
@@ -145,7 +146,8 @@ class EmbeddingRetriever:
             self._init_error = f"openai SDK not installed: {exc}"
             return None
 
-        self._client = OpenAI(api_key=api_key, timeout=self.timeout_s, max_retries=1)
+        # No retries: ensure_index trips the breaker on failure instead.
+        self._client = OpenAI(api_key=api_key, timeout=self.timeout_s, max_retries=0)
         return self._client
 
     def _embed(self, texts: List[str]) -> Optional[np.ndarray]:
@@ -163,11 +165,20 @@ class EmbeddingRetriever:
             return None
 
     def ensure_index(self) -> bool:
-        """Build the document matrix if needed. False means unavailable."""
+        """Build the document matrix if needed. False means unavailable.
+
+        Trips a circuit breaker on the first failure. Without it, an expired
+        key or a dead network makes every subsequent query pay the full HTTP
+        timeout before falling back — measured at ~1.3s per SOP lookup against
+        a 200ms budget. One failure is enough to know the backend is down.
+        """
         if self._doc_matrix is not None:
             return True
+        if self._circuit_open:
+            return False
         if not self.is_available:
             self._init_error = self._init_error or "OPENAI_API_KEY not set"
+            self._circuit_open = True
             return False
 
         payload = [
@@ -176,9 +187,16 @@ class EmbeddingRetriever:
         ]
         matrix = self._embed(payload)
         if matrix is None:
+            self._circuit_open = True
             return False
         self._doc_matrix = matrix
         return True
+
+    def reset_circuit(self) -> None:
+        """Re-arm the semantic path after the cause was fixed (key, network)."""
+        self._circuit_open = False
+        self._init_error = None
+        self._client = None
 
     def search(self, query: str) -> Optional[List[Tuple[int, float]]]:
         """Return (doc_index, cosine_similarity) desc, or None if unavailable."""
@@ -191,6 +209,7 @@ class EmbeddingRetriever:
         else:
             embedded = self._embed([query])
             if embedded is None:
+                self._circuit_open = True
                 return None
             q_vec = embedded[0]
             self._query_cache[query] = q_vec

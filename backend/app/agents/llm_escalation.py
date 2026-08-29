@@ -112,11 +112,12 @@ class LLMEscalationAgent:
     key, and a missing key degrades to UNAVAILABLE instead of raising.
     """
 
-    def __init__(self, model: str = "gpt-4o-mini", timeout_s: float = 8.0):
+    def __init__(self, model: str = "gpt-4o-mini", timeout_s: float = 5.0):
         self.model = model
         self.timeout_s = timeout_s
         self._client = None
         self._init_error: Optional[str] = None
+        self._circuit_open = False
 
     @property
     def is_available(self) -> bool:
@@ -140,11 +141,23 @@ class LLMEscalationAgent:
             self._init_error = f"openai SDK not installed: {exc}"
             return None
 
-        self._client = OpenAI(api_key=api_key, timeout=self.timeout_s, max_retries=1)
+        # No retries: a failure trips the circuit breaker instead, so a dead
+        # backend costs one timeout for the whole run, not one per request.
+        self._client = OpenAI(api_key=api_key, timeout=self.timeout_s, max_retries=0)
         return self._client
 
     def classify(self, raw_text: str, triggers: List[EscalationTrigger]) -> EscalationResult:
         start = time.perf_counter()
+
+        if self._circuit_open:
+            # A prior call already proved the backend is unreachable. Paying the
+            # HTTP timeout again on every invoice would blow the latency budget.
+            return EscalationResult(
+                status=EscalationStatus.UNAVAILABLE,
+                triggers=triggers,
+                latency_ms=round((time.perf_counter() - start) * 1000.0, 2),
+                error=self._init_error,
+            )
 
         client = self._get_client()
         if client is None:
@@ -197,9 +210,17 @@ class LLMEscalationAgent:
 
         except Exception as exc:
             # Never break the demo: the caller keeps the fast-path answer.
+            # Quota, auth and connection errors will not fix themselves within
+            # a run, so stop retrying and keep the fast path at full speed.
+            self._init_error = f"{type(exc).__name__}: {exc}"
+            if type(exc).__name__ in {
+                "RateLimitError", "AuthenticationError", "PermissionDeniedError",
+                "APIConnectionError", "APITimeoutError",
+            }:
+                self._circuit_open = True
             return EscalationResult(
                 status=EscalationStatus.FAILED,
                 triggers=triggers,
                 latency_ms=round((time.perf_counter() - start) * 1000.0, 2),
-                error=f"{type(exc).__name__}: {exc}",
+                error=self._init_error,
             )

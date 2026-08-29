@@ -175,3 +175,21 @@ def test_live_escalation_classifies_held_out_item():
 
     assert result.status == EscalationStatus.ESCALATED, result.error
     assert result.debit_account == "TK 642"  # a service, not inventory
+
+
+def test_open_circuit_returns_immediately_without_calling_the_api():
+    """One unreachable-backend failure must not be re-paid on every invoice.
+
+    Regression test for the missing circuit breaker: with an exhausted key,
+    each low-confidence invoice paid the full API round-trip (~950ms measured)
+    before falling back, against a 200ms budget.
+    """
+    agent = LLMEscalationAgent()
+    agent._circuit_open = True
+    agent._init_error = "RateLimitError: simulated"
+
+    result = agent.classify("Hàng hóa: Dịch vụ vận chuyển.", [EscalationTrigger.LOW_CONFIDENCE])
+
+    assert result.status == EscalationStatus.UNAVAILABLE
+    assert result.latency_ms < 5.0
+    assert result.error == "RateLimitError: simulated"
