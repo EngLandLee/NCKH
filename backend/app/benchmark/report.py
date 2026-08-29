@@ -60,15 +60,52 @@ def main() -> int:
 
     correct, total = _held_out_gl_accuracy()
     print("=== Held-out generalization (line items absent from the templates) ===")
-    print(f"GL classification accuracy: {correct}/{total} = {correct / total * 100:.2f}%")
+    print(f"Fast path (regex) accuracy: {correct}/{total} = {correct / total * 100:.2f}%")
     print("Baseline 'always TK 152'  : 25.00%")
     if correct / total <= 0.25:
         print("=> The rule-based fast path shows NO skill beyond the majority class.")
         print("   This is the quantified case for LLM escalation on low confidence.")
     print()
 
+    _report_escalation()
+
     print(report.latex_table)
     return 0
+
+
+def _report_escalation() -> None:
+    """Measure the slow path on the held-out set, if a key is configured."""
+    from backend.app.agents.invoice_agent import InvoiceAgent, InvoiceRawInput
+    from backend.app.agents.llm_escalation import LLMEscalationAgent
+    from backend.tests.test_generalization import HELD_OUT_INVOICES, _invoice_text
+
+    print("=== LLM escalation (slow path) ===")
+    if not LLMEscalationAgent().is_available:
+        print("OPENAI_API_KEY not set — skipping. The fast path degrades safely;")
+        print("set the key and re-run to measure the escalation uplift.")
+        print()
+        return
+
+    agent = InvoiceAgent()
+    correct = escalated = 0
+    latencies = []
+    for item, expected in HELD_OUT_INVOICES:
+        # Drop the tax code so these look like messy real-world scans.
+        text = _invoice_text(item).replace("Mã số thuế: 0312345678. ", "")
+        res = agent.process(InvoiceRawInput(raw_text=text, filename="held_out.txt"))
+        if res.escalation_status == "ESCALATED":
+            escalated += 1
+            latencies.append(res.escalation_latency_ms)
+        if res.debit_account == expected:
+            correct += 1
+
+    n = len(HELD_OUT_INVOICES)
+    print(f"Escalated          : {escalated}/{n}")
+    print(f"Accuracy after LLM : {correct}/{n} = {correct / n * 100:.2f}%")
+    if latencies:
+        print(f"Escalation latency : mean {sum(latencies) / len(latencies):.0f} ms, "
+              f"max {max(latencies):.0f} ms")
+    print()
 
 
 if __name__ == "__main__":

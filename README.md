@@ -33,9 +33,11 @@
                                            │
                         (Nếu Độ Tin Cậy < 0.85 hoặc Bất Thường)
                                            ▼
-                       [ OpenAI LLM Escalation & HITL ]  ⚠️ CHƯA TRIỂN KHAI
-                       - Function Calling & Structured Outputs   (kế hoạch)
-                       - AgentDB Long-term Memory  (đã có: ghi log quyết định)
+                       [ OpenAI LLM Escalation & HITL ]  ✅ ĐÃ TRIỂN KHAI
+                       - OpenAI Structured Outputs (Pydantic schema, temp=0)
+                       - Trigger: confidence < 0.85 | lệch số học | thiếu MST
+                       - Fail-safe: không key/lỗi API → giữ kết quả fast-path
+                       - AgentDB Long-term Memory (ghi log quyết định)
 ```
 
 ---
@@ -69,7 +71,27 @@ Bộ dữ liệu benchmark được sinh từ **6 mẫu nhà cung cấp**. Đi�
 | In-distribution (10,000 bản ghi) | **100.00%** | Khớp 6 mẫu sinh dữ liệu |
 | **Held-out (mặt hàng mới)** | **25.00%** | = baseline "luôn đoán TK 152" → **không có kỹ năng thật** |
 
-Bộ luật regex mặc định về TK 152 cho mọi mặt hàng lạ. Đây chính là **lý do định lượng** để kích hoạt nhánh LLM escalation khi `confidence < 0.85` (xem `backend/tests/test_generalization.py`).
+Bộ luật regex mặc định về TK 152 cho mọi mặt hàng lạ. Đây chính là **lý do định lượng** để kích hoạt nhánh LLM escalation (xem `backend/tests/test_generalization.py`).
+
+### 🧠 Nhánh LLM Escalation (Slow Path)
+
+Nhánh chậm **chỉ** kích hoạt trên phần đuôi khó — đo được **0/2500 hóa đơn sạch** phải escalate, nên fast-path vẫn giữ nguyên 100% và độ trễ ~0.35ms.
+
+| Điều kiện kích hoạt | Ý nghĩa nghiệp vụ |
+| :--- | :--- |
+| `LOW_CONFIDENCE` | Regex không chắc chắn (`confidence < 0.85`) |
+| `MATH_MISMATCH` | Tiền hàng + thuế ≠ tổng thanh toán |
+| `UNKNOWN_VENDOR` | Không đọc được Mã số thuế |
+
+Triển khai: **OpenAI Structured Outputs** (`chat.completions.parse` + Pydantic schema, `temperature=0`) buộc mô hình trả đúng 1 trong 4 tài khoản VAS, kèm `confidence` và `reasoning` tiếng Việt.
+
+**Nguyên tắc an toàn cho Demo Day:** không có API key, mất mạng, hoặc lỗi/timeout → hệ thống **giữ nguyên kết quả fast-path** và ghi trạng thái `UNAVAILABLE`/`FAILED`, **không bao giờ ném lỗi**. Mọi lần escalate đều lưu vết `fast_path_debit_account` để đối chiếu trước/sau.
+
+```bash
+# Đo mức cải thiện của nhánh LLM trên tập held-out
+export OPENAI_API_KEY=sk-...
+PYTHONPATH=. backend/venv/bin/python -m backend.app.benchmark.report
+```
 
 > 📌 **Ghi chú phương pháp:** Macro-F1 chỉ báo cáo cho 2 domain có nhãn phân loại (invoice, RAG). Logistics và Demand được chấm bằng *kiểm định khả thi* và *tính lại công thức* — F1 theo lớp không có ý nghĩa ở đó nên để trống thay vì điền số giả.
 
@@ -92,6 +114,9 @@ backend/venv/bin/pip install -r backend/requirements.txt
 
 # Frontend
 cd frontend && pnpm install && cd ..
+
+# (Tùy chọn) Bật nhánh LLM escalation — thiếu key hệ thống vẫn chạy bình thường
+echo 'OPENAI_API_KEY=sk-...' > .env
 ```
 
 ### 1. Khởi chạy 1-Click (All-in-One)

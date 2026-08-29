@@ -38,6 +38,7 @@ class DualSpeedRouter:
                 domain="invoice",
                 status=res.status,
                 latency_ms=round(latency, 2),
+                # False when the request took the LLM slow path.
                 is_fast_path=res.is_fast_path,
                 data=res.model_dump()
             )
