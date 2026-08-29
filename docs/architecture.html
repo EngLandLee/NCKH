@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SupplyChain-AgenticHub — Kiến trúc Dual-Speed</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1400px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · MLAI Hackathon 2026</p>
+    <h1>SupplyChain-AgenticHub — Định tuyến hai tốc độ</h1>
+
+    <svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="agentichub-arch-title agentichub-arch-desc">
+      <title id="agentichub-arch-title">SupplyChain-AgenticHub — Kiến trúc Dual-Speed</title>
+      <desc id="agentichub-arch-desc">Dashboard React gọi FastAPI gateway, gateway chuyển yêu cầu cho bộ định tuyến hai tốc độ. Bốn agent nghiệp vụ chạy trên đường nhanh tất định bằng regex, OR-Tools, NumPy và BM25; chỉ khi độ tin cậy thấp thì bộ định tuyến mới chuyển sang đường chậm gọi OpenAI, và khi OpenAI không khả dụng thì kết quả đường nhanh được giữ nguyên.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- ============ ZONES (drawn first) ============ -->
+      <!-- Zone 1: Client -->
+      <rect x="40" y="188" width="240" height="228" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="96" y="192" width="128" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="160" y="201" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">CLIENT · BROWSER</text>
+
+      <!-- Zone 2: Orchestration + agents -->
+      <rect x="332" y="72" width="612" height="648" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="348" y="76" width="196" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="446" y="85" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">FASTAPI · PYTHON 3.12</text>
+
+      <!-- Zone 3: Deterministic engines -->
+      <rect x="1000" y="440" width="304" height="280" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="1008" y="444" width="140" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="1078" y="453" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">FAST PATH · SOLVERS</text>
+
+      <!-- ============ ARROWS (before boxes) ============ -->
+
+      <!-- Dashboard -> Gateway (horizontal, same y) -->
+      <line x1="264" y1="300" x2="372" y2="300" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <rect x="292" y="272" width="52" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="318" y="281" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">/api/*</text>
+
+      <!-- Gateway -> Router (horizontal, same y) -->
+      <line x1="516" y1="300" x2="612" y2="300" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect x="536" y="272" width="52" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="562" y="281" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ROUTE</text>
+
+      <!-- Router -> Agents (vertical down, same x) -->
+      <line x1="712" y1="364" x2="712" y2="452" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <rect x="728" y="396" width="76" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="766" y="405" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">FAST PATH</text>
+
+      <!-- Router -> LLM escalation (vertical up, same x) -->
+      <line x1="712" y1="236" x2="712" y2="176" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <rect x="728" y="196" width="112" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="784" y="205" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CONF &lt; 0.85</text>
+
+      <!-- LLM -> OpenAI (horizontal right, same y) -->
+      <line x1="852" y1="156" x2="1148" y2="156" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <rect x="936" y="128" width="132" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="1002" y="137" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">STRUCTURED OUT</text>
+
+      <!-- LLM fallback back to Router: dashed, offset 24px left of the up-arrow -->
+      <path d="M 672,176 V 236" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <rect x="536" y="192" width="120" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="596" y="201" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">FALLBACK · KEEP</text>
+
+      <!-- Agent row -> solvers (4 horizontal lines, each its own y) -->
+      <line x1="884" y1="500" x2="1044" y2="500" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="884" y1="560" x2="1044" y2="560" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="884" y1="620" x2="1044" y2="620" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="884" y1="680" x2="1044" y2="680" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- ============ NODES ============ -->
+
+      <!-- Dashboard -->
+      <rect x="72" y="252" width="192" height="96" rx="6" fill="#f5f5f5"/>
+      <rect x="72" y="252" width="192" height="96" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399" stroke-width="1"/>
+      <rect x="80" y="260" width="36" height="12" rx="2" fill="transparent" stroke="rgba(122,131,153,0.40)" stroke-width="0.8"/>
+      <text x="98" y="269" fill="rgba(122,131,153,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">UI</text>
+      <text x="168" y="304" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Dashboard</text>
+      <text x="168" y="328" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">React 18 · Vite · :3000</text>
+
+      <!-- FastAPI Gateway -->
+      <rect x="372" y="252" width="144" height="96" rx="6" fill="#f5f5f5"/>
+      <rect x="372" y="252" width="144" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="380" y="260" width="36" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="398" y="269" fill="rgba(45,49,66,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">API</text>
+      <text x="444" y="304" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gateway</text>
+      <text x="444" y="328" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">5 routers · :8008</text>
+
+      <!-- Dual-Speed Router — FOCAL 1 -->
+      <rect x="612" y="236" width="200" height="128" rx="6" fill="#f5f5f5"/>
+      <rect x="612" y="236" width="200" height="128" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+      <rect x="620" y="244" width="60" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.40)" stroke-width="0.8"/>
+      <text x="650" y="253" fill="rgba(235,108,54,0.9)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">ROUTER</text>
+      <text x="712" y="292" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Dual-Speed Router</text>
+      <text x="712" y="316" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">router.py</text>
+      <text x="712" y="340" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">confidence gate</text>
+
+      <!-- LLM Escalation — FOCAL 2 -->
+      <rect x="612" y="112" width="240" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="612" y="112" width="240" height="64" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+      <rect x="620" y="120" width="60" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.40)" stroke-width="0.8"/>
+      <text x="650" y="129" fill="rgba(235,108,54,0.9)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SLOW</text>
+      <text x="768" y="146" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">LLM Escalation</text>
+      <text x="768" y="166" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">llm_escalation.py · 3 triggers</text>
+
+      <!-- OpenAI (external) -->
+      <rect x="1148" y="120" width="156" height="72" rx="6" fill="#f5f5f5"/>
+      <rect x="1148" y="120" width="156" height="72" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <rect x="1156" y="128" width="60" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+      <text x="1186" y="137" fill="rgba(45,49,66,0.7)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CLOUD</text>
+      <text x="1226" y="160" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">OpenAI API</text>
+      <text x="1226" y="180" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">gpt-4o-mini · embeddings</text>
+
+      <!-- Agent row container -->
+      <rect x="540" y="452" width="344" height="256" rx="6" fill="#f5f5f5"/>
+      <rect x="540" y="452" width="344" height="256" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="548" y="460" width="60" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="578" y="469" fill="rgba(45,49,66,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">AGENTS</text>
+
+      <text x="576" y="506" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Invoice · VAS TT200</text>
+      <text x="576" y="566" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Logistics · CVRP</text>
+      <text x="576" y="626" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Demand · ROP / SS</text>
+      <text x="576" y="686" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">SOP RAG</text>
+
+      <!-- Solver nodes -->
+      <rect x="1044" y="476" width="216" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="1044" y="476" width="216" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="1152" y="498" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Regex + GL Mapper</text>
+      <text x="1152" y="514" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">pdf_parser.py</text>
+
+      <rect x="1044" y="536" width="216" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="1044" y="536" width="216" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="1152" y="558" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Google OR-Tools</text>
+      <text x="1152" y="574" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">C++ CVRP · 25ms cap</text>
+
+      <rect x="1044" y="596" width="216" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="1044" y="596" width="216" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="1152" y="618" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">NumPy Forecaster</text>
+      <text x="1152" y="634" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">z·σ·√LT</text>
+
+      <rect x="1044" y="656" width="216" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="1044" y="656" width="216" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="1152" y="678" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">BM25 Retriever</text>
+      <text x="1152" y="694" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">embeddings.py</text>
+
+      <!-- ============ LEGEND ============ -->
+      <line x1="40" y1="792" x2="1560" y2="792" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <text x="40" y="812" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+
+      <rect x="160" y="800" width="16" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+      <text x="184" y="812" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Điểm quyết định</text>
+
+      <rect x="372" y="800" width="16" height="12" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="396" y="812" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Dịch vụ nội bộ</text>
+
+      <rect x="568" y="800" width="16" height="12" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="592" y="812" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Bộ giải tất định</text>
+
+      <rect x="772" y="800" width="16" height="12" rx="2" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="796" y="812" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Dịch vụ ngoài</text>
+
+      <line x1="972" y1="808" x2="1012" y2="808" stroke="#2e5aa8" stroke-width="1.2"/>
+      <text x="1024" y="812" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Gọi mạng</text>
+
+      <line x1="1168" y1="808" x2="1208" y2="808" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="1220" y="812" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Suy biến an toàn</text>
+
+      <text x="40" y="856" fill="rgba(45,49,66,0.55)" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.04em">Đường nhanh 0.31 ms trung bình · P95 1.07 ms · 0/2500 hóa đơn sạch cần escalate — đo trên 10,000 bản ghi</text>
+    </svg>
+  </div>
+</body>
+</html>
