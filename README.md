@@ -9,9 +9,9 @@
 
 **SupplyChain-AgenticHub** là nền tảng điều phối đa tác thể (Multi-Agent Swarm) kết hợp giữa trí tuệ nhân tạo và các công cụ toán học tối ưu hóa tất định, giúp doanh nghiệp tự động hóa 4 quy trình trọng yếu:
 1. **Invoice & Accounting Agent:** Tự động đọc hiểu hóa đơn VAT, bóc tách dữ liệu và định khoản kế toán VAS/Circular 200 (TK 152/156/133/331) với đối soát toán học 3 chiều.
-2. **Dynamic VRP Logistics Agent:** Bộ giải Google OR-Tools C++ giải bài toán định tuyến đa phương tiện (CVRP) dưới **50ms**, tự động tính toán lại lộ trình theo kẹt xe và mưa bão ngập lụt.
+2. **Dynamic VRP Logistics Agent:** Bộ giải Google OR-Tools C++ giải bài toán định tuyến đa phương tiện (CVRP), đo được **~1.0ms** với 4 điểm giao / 2 xe (giới hạn solver 25ms), tự động tính toán lại lộ trình theo kẹt xe và mưa bão ngập lụt.
 3. **Demand & Disruption Forecaster:** Dự báo nhu cầu 30 ngày bằng mô hình chuỗi thời gian kết hợp xu hướng và tính mùa vụ, tính toán Tồn kho an toàn (Safety Stock) và Điểm đặt hàng lại (ROP).
-4. **Enterprise SOP RAG Agent:** Tra cứu tức thì quy chế tài chính, sổ tay logistics và quy chuẩn kho với Semantic Caching đạt tốc độ **< 90ms**.
+4. **Enterprise SOP RAG Agent:** Tra cứu quy chế tài chính, sổ tay logistics và quy chuẩn kho bằng xếp hạng từ khóa trên kho SOP nội bộ, kèm exact-match cache (đo được **~0.01ms**, xem mục Benchmark).
 
 ---
 
@@ -26,35 +26,73 @@
           ┌────────────────────────────────┼────────────────────────────────┐
           ▼                                ▼                                ▼
   [ Fast-Path: Heuristics ]       [ Fast-Path: OR-Tools ]          [ Fast-Path: In-Memory ]
-  - Regex & VAS GL Mapper         - C++ CVRP Solver (<50ms)        - Semantic Cache & BM25
-  - Time-series Forecast (<30ms)  - Traffic/Weather penalties      - SOP Direct Citation (<90ms)
+  - Regex & VAS GL Mapper         - C++ CVRP Solver (~1.0ms)       - Keyword rank + exact cache
+  - Time-series Forecast (~0.18ms) - Traffic/Weather penalties     - SOP Direct Citation (~0.01ms)
           │                                │                                │
           └────────────────────────────────┼────────────────────────────────┘
                                            │
                         (Nếu Độ Tin Cậy < 0.85 hoặc Bất Thường)
                                            ▼
-                            [ OpenAI LLM Escalation & HITL ]
-                            - Function Calling & Structured Outputs
-                            - Ruflo AgentDB Long-term Memory
+                       [ OpenAI LLM Escalation & HITL ]  ⚠️ CHƯA TRIỂN KHAI
+                       - Function Calling & Structured Outputs   (kế hoạch)
+                       - AgentDB Long-term Memory  (đã có: ghi log quyết định)
 ```
 
 ---
 
-## 📊 Kết Quả Benchmark Hiệu Năng (10,000+ Records)
+## 📊 Kết Quả Benchmark Hiệu Năng (10,000 Records)
 
-| Hạng mục Tác vụ (Domain) | Độ trễ Trung bình (Mean) | Độ trễ P95 | Tỷ lệ Fast-Path | Độ chính xác (Acc) | F1-Score |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Invoice & Accounting** | 2.14 ms | 4.80 ms | 100.0% | 98.5% | 0.978 |
-| **Dynamic VRP Logistics** | 12.30 ms | 24.50 ms | 100.0% | 99.1% | 0.985 |
-| **Demand Forecasting** | 1.05 ms | 2.20 ms | 100.0% | 97.4% | 0.968 |
-| **Enterprise SOP RAG** | 1.85 ms | 4.10 ms | 100.0% | 96.0% | 0.952 |
-| **Toàn Hệ Thống (Overall)** | **4.33 ms** | **16.40 ms** | **100.0%** | **97.75%** | **0.971** |
+Số liệu dưới đây **tái lập được** bằng một lệnh duy nhất trên máy sạch:
 
-> ✅ **Đạt chỉ tiêu khắt khe:** Tốc độ trung bình **4.33ms** (thấp hơn rất nhiều so với ngưỡng giới hạn 200ms của cuộc thi).
+```bash
+PYTHONPATH=. backend/venv/bin/python -m backend.app.benchmark.report
+```
+
+### In-distribution (10,000 bản ghi của `operations_benchmark_v2.json`)
+
+| Hạng mục (Domain) | N | Mean | P95 | Acc | Macro-F1 | Tiêu chí chấm đúng |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Invoice & Accounting** | 2,500 | 0.033 ms | 0.040 ms | 100.00% | 1.0000 | Đúng TK Nợ **và** tổng tiền khớp nhãn |
+| **Dynamic VRP Logistics** | 2,500 | 1.023 ms | 1.180 ms | 100.00% | — | Lời giải **khả thi**: mọi điểm giao đúng 1 lần, không vượt tải |
+| **Demand Forecasting** | 2,500 | 0.179 ms | 0.220 ms | 100.00% | — | SS & ROP khớp công thức tính lại độc lập (sai số < 0.5) |
+| **Enterprise SOP RAG** | 2,500 | 0.010 ms | 0.010 ms | 100.00% | 1.0000 | Trích dẫn đầu tiên đúng mã SOP của nhãn |
+| **Toàn Hệ Thống** | **10,000** | **0.311 ms** | **1.070 ms** | **100.00%** | **1.0000** | |
+
+> ✅ Mean **0.311 ms**, P95 **1.070 ms** — thỏa ngưỡng 200ms của cuộc thi với biên rất rộng.
+
+### ⚠️ Held-out: giới hạn thật của Fast-Path
+
+Bộ dữ liệu benchmark được sinh từ **6 mẫu nhà cung cấp**. Điểm 100% ở trên đo *trong phân phối đó*; nó **không** chứng minh khả năng tổng quát hóa. Trên hóa đơn chưa từng gặp:
+
+| Bộ đo | Accuracy phân loại TK | Ghi chú |
+| :--- | :---: | :--- |
+| In-distribution (10,000 bản ghi) | **100.00%** | Khớp 6 mẫu sinh dữ liệu |
+| **Held-out (mặt hàng mới)** | **25.00%** | = baseline "luôn đoán TK 152" → **không có kỹ năng thật** |
+
+Bộ luật regex mặc định về TK 152 cho mọi mặt hàng lạ. Đây chính là **lý do định lượng** để kích hoạt nhánh LLM escalation khi `confidence < 0.85` (xem `backend/tests/test_generalization.py`).
+
+> 📌 **Ghi chú phương pháp:** Macro-F1 chỉ báo cáo cho 2 domain có nhãn phân loại (invoice, RAG). Logistics và Demand được chấm bằng *kiểm định khả thi* và *tính lại công thức* — F1 theo lớp không có ý nghĩa ở đó nên để trống thay vì điền số giả.
 
 ---
 
 ## 🛠️ Cài Đặt & Khởi Chạy (Quick Start)
+
+### 0. Cài Đặt Môi Trường (Lần Đầu)
+
+> ⚠️ `ortools` **chưa có wheel cho Python 3.14** — bắt buộc dùng Python 3.12.
+
+```bash
+# Khuyến nghị: uv (không cần sudo, tự tải Python 3.12)
+uv venv backend/venv --python 3.12
+VIRTUAL_ENV=backend/venv uv pip install -r backend/requirements.txt
+
+# Hoặc dùng venv chuẩn (cần: sudo apt install python3.12-venv)
+python3.12 -m venv backend/venv
+backend/venv/bin/pip install -r backend/requirements.txt
+
+# Frontend
+cd frontend && pnpm install && cd ..
+```
 
 ### 1. Khởi chạy 1-Click (All-in-One)
 ```bash

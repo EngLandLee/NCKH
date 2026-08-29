@@ -1,0 +1,75 @@
+"""Reproducible benchmark report.
+
+Runs the evaluator over the committed dataset and prints per-domain metrics,
+the held-out generalization check, and the LaTeX table for the paper.
+
+    PYTHONPATH=. backend/venv/bin/python -m backend.app.benchmark.report
+"""
+import json
+import os
+import sys
+
+from backend.app.benchmark.evaluator import BenchmarkEvaluator
+from backend.app.solvers.pdf_parser import InvoiceRuleParser
+
+DATASET = os.path.join("data", "operations_benchmark_v2.json")
+
+
+def _held_out_gl_accuracy() -> tuple[int, int]:
+    """Classifier accuracy on line items absent from the generator templates."""
+    from backend.tests.test_generalization import HELD_OUT_INVOICES, _invoice_text
+
+    parser = InvoiceRuleParser()
+    correct = sum(
+        1 for item, expected in HELD_OUT_INVOICES
+        if parser.extract_fields(_invoice_text(item))["debit_account"] == expected
+    )
+    return correct, len(HELD_OUT_INVOICES)
+
+
+def main() -> int:
+    if not os.path.exists(DATASET):
+        print(f"Dataset not found: {DATASET}", file=sys.stderr)
+        return 1
+
+    with open(DATASET, encoding="utf-8") as f:
+        records = json.load(f)["records"]
+
+    report = BenchmarkEvaluator().run_evaluation(records)
+
+    print(f"=== In-distribution benchmark — {report.total_samples:,} records ===")
+    header = f"{'domain':<11}{'N':>7}{'acc':>9}{'macroF1':>10}{'mean_ms':>10}{'p95_ms':>9}"
+    print(header)
+    print("-" * len(header))
+    for m in report.per_domain:
+        f1 = f"{m.macro_f1:.4f}" if m.macro_f1 is not None else "--"
+        print(f"{m.domain:<11}{m.samples:>7}{m.accuracy * 100:>8.2f}%{f1:>10}"
+              f"{m.mean_latency_ms:>10.3f}{m.p95_latency_ms:>9.3f}")
+    print("-" * len(header))
+    print(f"{'OVERALL':<11}{report.total_samples:>7}{report.accuracy * 100:>8.2f}%"
+          f"{report.overall_f1_score:>10.4f}{report.mean_latency_ms:>10.3f}{report.p95_ms:>9.3f}")
+    print()
+    print(f"p50/p90/p99 : {report.p50_ms} / {report.p90_ms} / {report.p99_ms} ms")
+    print(f"fast-path   : {report.fast_path_ratio_pct}%")
+    print()
+
+    print("Grading criteria (what 'correct' means):")
+    for m in report.per_domain:
+        print(f"  {m.domain:<11} {m.criterion}")
+    print()
+
+    correct, total = _held_out_gl_accuracy()
+    print("=== Held-out generalization (line items absent from the templates) ===")
+    print(f"GL classification accuracy: {correct}/{total} = {correct / total * 100:.2f}%")
+    print("Baseline 'always TK 152'  : 25.00%")
+    if correct / total <= 0.25:
+        print("=> The rule-based fast path shows NO skill beyond the majority class.")
+        print("   This is the quantified case for LLM escalation on low confidence.")
+    print()
+
+    print(report.latex_table)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

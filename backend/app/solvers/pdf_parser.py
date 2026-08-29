@@ -38,16 +38,27 @@ class InvoiceRuleParser:
         if total_amount == 0 and subtotal > 0:
             total_amount = subtotal + vat_amount
 
-        # GL Code assignment logic
         text_lower = text.lower()
-        if any(k in text_lower for k in ["nguyên vật liệu", "vật tư", "thép", "nhôm", "hóa chất", "bao bì"]):
-            debit_account = "TK 152"
-        elif any(k in text_lower for k in ["hàng hóa", "thành phẩm", "linh kiện"]):
-            debit_account = "TK 156"
-        elif any(k in text_lower for k in ["công cụ", "dụng cụ", "thiết bị"]):
-            debit_account = "TK 153"
-        elif any(k in text_lower for k in ["dịch vụ", "vận chuyển", "logistics", "tiền điện", "tiền nước"]):
+
+        # GL Code assignment logic.
+        # Classify on the line-item description only. "Hàng hóa:" is the field
+        # *label* on every VAT invoice, so matching it against the whole
+        # document would route tools and services to TK 156 as well.
+        item_match = re.search(
+            r"(?:Hàng hóa|Tên hàng hóa, dịch vụ|Diễn giải|Nội dung)[:\s]*([^.]+)",
+            text,
+            re.IGNORECASE,
+        )
+        item_text = (item_match.group(1) if item_match else text).lower()
+
+        if any(k in item_text for k in ["dịch vụ", "vận chuyển", "cước", "logistics", "tiền điện", "tiền nước"]):
             debit_account = "TK 642"
+        elif any(k in item_text for k in ["công cụ", "dụng cụ", "thiết bị", "đồng hồ", "máy đo"]):
+            debit_account = "TK 153"
+        elif any(k in item_text for k in ["nguyên vật liệu", "vật tư", "thép", "nhôm", "hóa chất", "bao bì", "màng ghép"]):
+            debit_account = "TK 152"
+        elif any(k in item_text for k in ["thành phẩm", "linh kiện", "vi mạch", "bán dẫn"]):
+            debit_account = "TK 156"
         else:
             debit_account = "TK 152"
 
